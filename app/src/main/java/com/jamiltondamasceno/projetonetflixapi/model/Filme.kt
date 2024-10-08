@@ -1,7 +1,10 @@
 package com.jamiltondamasceno.projetonetflixapi.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Filme(
     val adult: Boolean,
     val backdrop_path: String,
@@ -17,4 +20,4 @@ data class Filme(
     val video: Boolean,
     val vote_average: Double,
     val vote_count: Int
-)
+) : Parcelable

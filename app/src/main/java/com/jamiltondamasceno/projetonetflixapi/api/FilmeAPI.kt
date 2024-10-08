@@ -10,7 +10,7 @@ interface FilmeAPI {
     @GET("movie/latest?api_key=${RetrofitService.API_KEY}")
     suspend fun recuperarFilmeRecente() : Response<FilmeRecente>
 
-    @GET("movie/popular?api_key=${RetrofitService.API_KEY}")
+    @GET("movie/popular?language=pt-Br&api_key=${RetrofitService.API_KEY}")
     suspend fun recuperarFilmesPopulares() : Response<FilmeResposta>
 
 }

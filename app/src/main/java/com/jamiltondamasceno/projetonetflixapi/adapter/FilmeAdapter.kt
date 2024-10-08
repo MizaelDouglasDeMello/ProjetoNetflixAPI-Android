@@ -9,7 +9,7 @@ import com.jamiltondamasceno.projetonetflixapi.model.Filme
 import com.squareup.picasso.Picasso
 
 class FilmeAdapter(
-
+    val onClick: (Filme) -> Unit
 ) : RecyclerView.Adapter<FilmeAdapter.FilmeViewHolder>() {
 
     private var listaFilmes: List<Filme> = emptyList()
@@ -22,21 +22,24 @@ class FilmeAdapter(
     inner class FilmeViewHolder(val binding: ItemFilmeBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
-            fun bind(filme: Filme){
+        fun bind(filme: Filme){
 
-                val nomeFilme = filme.backdrop_path
-                val tamanhoFilme = "w780"
-                val urlBase = RetrofitService.BASE_URL_IMAGEM
+            val nomeFilme = filme.backdrop_path
+            val tamanhoFilme = "w780"
+            val urlBase = RetrofitService.BASE_URL_IMAGEM
 
-                val urlFilme = urlBase + tamanhoFilme + nomeFilme
+            val urlFilme = urlBase + tamanhoFilme + nomeFilme
 
-                Picasso.get()
-                    .load( urlFilme )
-                    .into( binding.imgItemFilme )
+            Picasso.get()
+                .load( urlFilme )
+                .into( binding.imgItemFilme )
 
-                binding.textTitulo.text = filme.title
-
+            binding.textTitulo.text = filme.title
+            binding.clItem.setOnClickListener {
+                onClick( filme )
             }
+
+        }
 
     }
 
