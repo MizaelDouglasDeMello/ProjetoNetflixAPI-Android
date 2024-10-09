@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.jamiltondamasceno.projetonetflixapi.adapter.FilmeAdapter
 import com.jamiltondamasceno.projetonetflixapi.api.RetrofitService
 import com.jamiltondamasceno.projetonetflixapi.databinding.ActivityMainBinding
@@ -17,6 +19,7 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
+    private var paginaAtual = 1
     private val TAG = "info_filme"
     private val binding by lazy {
         ActivityMainBinding.inflate( layoutInflater )
@@ -53,7 +56,36 @@ class MainActivity : AppCompatActivity() {
             false
         )
 
+        binding.rvPopulares.addOnScrollListener(object : OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val rolarHorizotal = recyclerView.canScrollHorizontally(
+                    1
+                )
+
+                if (!rolarHorizotal){
+                    recuperarFilmesPopularesProximaPagina()
+                }
+                Log.i("onScrolled", "onScrolled: $rolarHorizotal")
+
+
+//                Log.i("onScrolled", "onScrolled: dx: $dx - dy: $dy")
+//
+//                if (dy > 0){
+//                    binding.fabAdicionar.hide()
+//                }else{
+//                    binding.fabAdicionar.show()
+//                }
+            }
+        })
+
     }
+//    class  ScrollCustmizado: OnScrollListener(){
+//        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//            super.onScrolled(recyclerView, dx, dy)
+//        }
+//    }
 
 
     override fun onStart() {
@@ -62,14 +94,21 @@ class MainActivity : AppCompatActivity() {
         recuperarFilmesPopulares()
     }
 
-    private fun recuperarFilmesPopulares() {
+    private fun recuperarFilmesPopularesProximaPagina(){
+        if (paginaAtual < 1000){
+            paginaAtual++
+            recuperarFilmesPopulares(paginaAtual)
+        }
+    }
+
+    private fun recuperarFilmesPopulares(pagina: Int = 1) {
 
         jobFilmesPopulares = CoroutineScope( Dispatchers.IO ).launch {
 
             var resposta: Response<FilmeResposta>? = null
 
             try {
-                resposta = filmeAPI.recuperarFilmesPopulares()
+                resposta = filmeAPI.recuperarFilmesPopulares(pagina)
             }catch (e: Exception){
                 exibirMensagem("Erro ao fazer a requisição")
             }

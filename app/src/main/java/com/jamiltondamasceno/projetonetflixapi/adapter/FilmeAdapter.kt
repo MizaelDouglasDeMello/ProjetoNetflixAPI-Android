@@ -12,10 +12,10 @@ class FilmeAdapter(
     val onClick: (Filme) -> Unit
 ) : RecyclerView.Adapter<FilmeAdapter.FilmeViewHolder>() {
 
-    private var listaFilmes: List<Filme> = emptyList()
+    private var listaFilmes = mutableListOf<Filme>()
 
     fun adicionarLista( lista: List<Filme> ){
-        this.listaFilmes = lista
+        this.listaFilmes.addAll(lista)
         notifyDataSetChanged()
     }
 
